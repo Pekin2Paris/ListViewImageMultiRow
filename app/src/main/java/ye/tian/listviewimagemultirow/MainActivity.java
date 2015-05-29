@@ -23,19 +23,25 @@ public class MainActivity extends Activity {
 
     MyAdapter myAdapter;
     ArrayList<SearchResults> searchResults;
+    private ArrayList<String> macList;
 
     private ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
-            int rssi = result.getRssi();
-            // do something with RSSI value
+            // do something
             SearchResults srNew = new SearchResults();
             srNew.setName(result.getDevice().getName());
             srNew.setCityState(result.getDevice().getAddress());
-            srNew.setPhone(Integer.toString(rssi));
+            srNew.setPhone(Integer.toString(result.getRssi()));
             srNew.setImageNumber(4);
-            addItems(srNew);
+
+            if (!macList.contains(result.getDevice().getAddress())) {
+                macList.add(result.getDevice().getAddress());
+                addItems(srNew);
+            } else {
+                resItems(macList.indexOf(result.getDevice().getAddress()), srNew);
+            }
         }
         @Override
         public void onScanFailed(int errorCode) {
@@ -51,12 +57,29 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void resItems(int ind, SearchResults newSR) {
+        synchronized (searchResults) {
+            searchResults.set(ind, newSR);
+            myAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void remItems(int ind) {
+        synchronized (searchResults) {
+            searchResults.remove(ind);
+            myAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        searchResults = GetSearchResults();
+        macList = new ArrayList<>();
+
+//        searchResults = GetSearchResults();
+        searchResults = new ArrayList<>();
         myAdapter = new MyAdapter(this, searchResults);
 
         final ListView listView = (ListView) findViewById(R.id.my_list_view);
