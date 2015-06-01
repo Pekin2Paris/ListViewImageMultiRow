@@ -7,13 +7,15 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,11 +23,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
+    private static final int RESULT_SETTINGS = 1, REQUEST_ENABLE_BT = 2;
+    private BluetoothAdapter btAdapter;
     MyAdapter myAdapter;
     ArrayList<SearchResults> searchResults;
     private ArrayList<String> macList;
+    private TextView textView1;
+    private TextView textView2;
 
-    private ScanCallback scanCallback = new ScanCallback() {
+    private ScanCallback newScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
@@ -43,6 +49,7 @@ public class MainActivity extends Activity {
                 resItems(macList.indexOf(result.getDevice().getAddress()), srNew);
             }
         }
+
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
@@ -76,9 +83,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        macList = new ArrayList<>();
+        textView1 = (TextView) this.findViewById(R.id.txt1);
+        textView2 = (TextView) this.findViewById(R.id.txt2);
 
-//        searchResults = GetSearchResults();
+        macList = new ArrayList<>();
         searchResults = new ArrayList<>();
         myAdapter = new MyAdapter(this, searchResults);
 
@@ -94,40 +102,40 @@ public class MainActivity extends Activity {
             }
         });
 
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
         final BluetoothLeScanner bleScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
+
+        checkBLE();
+        if (enableBLE()) {
+            textView2.setText(getResources().getString(R.string.ble_state) + "On");
+        } else {
+            textView2.setText(getResources().getString(R.string.ble_state) + "Off");
+        }
+
         ArrayList<ScanFilter> scanFilters = new ArrayList<>();
         ScanSettings scanSettings;
         ScanSettings.Builder scanSettingsBuilder = new ScanSettings.Builder();
         scanSettingsBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
         scanSettings = scanSettingsBuilder.build();
-        bleScanner.startScan(scanFilters, scanSettings, scanCallback);
+
+        bleScanner.startScan(scanFilters, scanSettings, newScanCallback);
     }
 
-    private ArrayList<SearchResults> GetSearchResults(){
-        ArrayList<SearchResults> results = new ArrayList<>();
+    private void checkBLE() {
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
 
-        SearchResults sr1 = new SearchResults();
-        sr1.setName("John Smith");
-        sr1.setCityState("Dallas, TX");
-        sr1.setPhone("214-555-1234");
-        sr1.setImageNumber(1);
-        results.add(sr1);
-
-        sr1 = new SearchResults();
-        sr1.setName("Jane Doe");
-        sr1.setCityState("Atlanta, GA");
-        sr1.setPhone("469-555-2587");
-        sr1.setImageNumber(2);
-        results.add(sr1);
-
-        sr1 = new SearchResults();
-        sr1.setName("Steve Young");
-        sr1.setCityState("Miami, FL");
-        sr1.setPhone("305-555-7895");
-        sr1.setImageNumber(3);
-        results.add(sr1);
-
-        return results;
+    private boolean enableBLE() {
+        boolean ret = true;
+        if (btAdapter == null || !btAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            ret = false;
+        }
+        return ret;
     }
 
     @Override

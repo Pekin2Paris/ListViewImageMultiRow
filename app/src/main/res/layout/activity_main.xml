@@ -10,23 +10,23 @@
         android:weightSum="2">
 
         <TextView
+            android:id="@+id/txt1"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:text="somebutton"
-            android:id="@+id/txt1"
             android:background="@android:color/background_dark"
-            android:textColor="@android:color/white"
-            android:gravity="center_vertical|left" />
+            android:gravity="center_vertical|start"
+            android:text="@string/ble_supported"
+            android:textColor="@android:color/white" />
 
         <TextView
+            android:id="@+id/txt2"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_weight="1"
-            android:text="somebutton"
-            android:id="@+id/txt2"
-            android:gravity="center_vertical|right"
             android:background="@android:color/background_dark"
+            android:gravity="center_vertical|start"
+            android:text="@string/ble_state"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

@@ -10,34 +10,35 @@ public class SearchResults {
     private String phone = "";
     private int imageNumber = 0;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setCityState(String cityState) {
-        this.cityState = cityState;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCityState() {
         return cityState;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setCityState(String cityState) {
+        this.cityState = cityState;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setImageNumber(int imageNumber) {
-        this.imageNumber = imageNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
+
     public int getImageNumber() {
         return imageNumber;
+    }
+
+    public void setImageNumber(int imageNumber) {
+        this.imageNumber = imageNumber;
     }
 }

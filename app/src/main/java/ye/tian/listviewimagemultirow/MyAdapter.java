@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by Ye Tian on 29/05/2015.
  */
 public class MyAdapter extends BaseAdapter {
-    
+
     private static ArrayList<SearchResults> searchArrayList;
 
     private Integer[] imgId = {
