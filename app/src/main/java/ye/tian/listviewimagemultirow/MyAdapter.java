@@ -21,7 +21,7 @@ public class MyAdapter extends BaseAdapter {
             R.drawable.smiley1a,
             R.drawable.smiley2a,
             R.drawable.smiley3a,
-            R.drawable.ic_ble_scanner
+            R.mipmap.bt
     };
 
     private LayoutInflater layoutInflater;

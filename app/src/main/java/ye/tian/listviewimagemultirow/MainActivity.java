@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
     private ArrayList<String> macList;
     private TextView textView1;
     private TextView textView2;
+    private Intent filterIntent;
 
     private ScanCallback newScanCallback = new ScanCallback() {
         @Override
@@ -93,12 +94,16 @@ public class MainActivity extends Activity {
         final ListView listView = (ListView) findViewById(R.id.my_list_view);
         listView.setAdapter(myAdapter);
 
+        filterIntent = new Intent(this, FilterActivity.class);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                 Object o = listView.getItemAtPosition(position);
                 SearchResults fullObject = (SearchResults) o;
-                Toast.makeText(MainActivity.this, "You have chosen: " + " " + fullObject.getName(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "You have chosen: " + " " + fullObject.getName(), Toast.LENGTH_LONG).show();
+                filterIntent.putExtra("firstKeyName","FirstKeyValue");
+                filterIntent.putExtra("secondKeyName","SecondKeyValue");
+                startActivity(filterIntent);
             }
         });
 
