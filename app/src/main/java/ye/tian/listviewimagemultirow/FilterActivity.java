@@ -393,6 +393,9 @@ public class FilterActivity extends Activity {
         checkBLE();
         enableBLE();
         scanInProgress = false;
+
+        Intent myIntent = getIntent(); // gets the previously created intent
+        String mac = myIntent.getStringExtra("MAC");
     }
 
     @Override

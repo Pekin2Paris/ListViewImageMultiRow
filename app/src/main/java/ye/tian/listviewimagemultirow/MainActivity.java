@@ -101,8 +101,7 @@ public class MainActivity extends Activity {
                 Object o = listView.getItemAtPosition(position);
                 SearchResults fullObject = (SearchResults) o;
 //                Toast.makeText(MainActivity.this, "You have chosen: " + " " + fullObject.getName(), Toast.LENGTH_LONG).show();
-                filterIntent.putExtra("firstKeyName","FirstKeyValue");
-                filterIntent.putExtra("secondKeyName","SecondKeyValue");
+                filterIntent.putExtra("MAC",fullObject.getCityState());
                 startActivity(filterIntent);
             }
         });
